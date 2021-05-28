@@ -22,12 +22,11 @@ class CalculatorPageState extends StatefulWidget {
 }
 
 class _CalculatorPageState extends State<CalculatorPageState> {
-  var result = ['0', ''];
+  CalculatorBrain brain = CalculatorBrain();
+  List<String> result = ['0', ''];
 
   @override
   Widget build(BuildContext context) {
-    CalculatorBrain brain = CalculatorBrain();
-
     return Scaffold(
       backgroundColor: Color(0xFFEDEBEC),
       body: SafeArea(
@@ -78,9 +77,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("AC");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("AC");
                         });
                       },
                     ),
@@ -91,9 +88,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("+/-");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("+/-");
                         });
                       },
                     ),
@@ -104,9 +99,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("%");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("%");
                         });
                       },
                     ),
@@ -117,9 +110,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("÷");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("÷");
                         });
                       },
                     ),
@@ -138,9 +129,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("7");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("7");
                         });
                       },
                     ),
@@ -151,9 +140,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("8");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("8");
                         });
                       },
                     ),
@@ -164,9 +151,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("9");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("9");
                         });
                       },
                     ),
@@ -177,9 +162,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("x");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("x");
                         });
                       },
                     ),
@@ -198,9 +181,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("4");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("4");
                         });
                       },
                     ),
@@ -211,9 +192,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("5");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("5");
                         });
                       },
                     ),
@@ -224,9 +203,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("6");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("6");
                         });
                       },
                     ),
@@ -237,9 +214,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("-");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("-");
                         });
                       },
                     ),
@@ -258,9 +233,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("1");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("1");
                         });
                       },
                     ),
@@ -271,9 +244,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("2");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("2");
                         });
                       },
                     ),
@@ -284,9 +255,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("3");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("3");
                         });
                       },
                     ),
@@ -297,9 +266,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("+");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("+");
                         });
                       },
                     ),
@@ -319,9 +286,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 2.9,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("0");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("0");
                         });
                       },
                     ),
@@ -332,9 +297,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed(".");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed(".");
                         });
                       },
                     ),
@@ -345,9 +308,7 @@ class _CalculatorPageState extends State<CalculatorPageState> {
                       buttonWidth: 8,
                       onPressed: () {
                         setState(() {
-                          var data = brain.buttonPressed("=");
-                          result[0] = data[0];
-                          result[1] = data[1];
+                          result = brain.buttonPressed("=");
                         });
                       },
                     ),
