@@ -13,8 +13,11 @@ class DartStack<E> {
 
   E peek() => _entries.last;
 
+  E getEntryAt(int index) => _entries[index];
+
   bool get isEmpty => _entries.isEmpty;
   bool get isNotEmpty => _entries.isNotEmpty;
+  int get length => _entries.length;
 
   @override
   String toString() => _entries.toString();
