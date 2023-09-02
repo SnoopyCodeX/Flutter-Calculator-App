@@ -95,7 +95,7 @@ class CalculatorBrain {
             return output;
           }
 
-          output[0] += '$answer%';
+          output[0] += ' = $answer%';
           output[1] = "= ${(answer.contains(".") ? (double.parse(answer) / 100) : (int.parse(answer) / 100))}"; // Display final result on bottom text
         } else {
           output[1] = "= ${output[0].contains(".") ? (double.parse(output[0]) / 100) : (int.parse(output[0]) / 100)}";
@@ -159,7 +159,7 @@ class CalculatorBrain {
       }
 
       // Remove last char from the top text
-      output[0] = topText.length > 1 ? topText.substring(0, topText.length - (isOperator(lastChar) || lastLastChar == ' ' ? 2 : 1)) : '';
+      output[0] = topText.length > 1 ? topText.substring(0, topText.length - (isOperator(lastChar) || lastLastChar == '-' || lastLastChar == ' ' ? 2 : 1)) : '';
       output[0] = output[0].isEmpty ? '0' : output[0];
     }
   }
@@ -182,9 +182,6 @@ class CalculatorBrain {
 
       case '^':
         return 2;
-
-      case '%':
-        return 3;
     }
 
     return -1;
@@ -232,13 +229,9 @@ class CalculatorBrain {
       } else {
         double operand2 = stack.pop();
 
-        if (exp == '!' || exp == '-') {
+        if (exp == '!') {
           String operator = exp;
-
-          if (exp != '-')
-            stack.push(performOperation(operand2, 0, operator));
-          else
-            stack.push(operand2 * -1);
+          stack.push(performOperation(operand2, 0, operator));
 
           continue;
         }
@@ -271,17 +264,20 @@ class CalculatorBrain {
 
         if (isDigitRegEx.hasMatch(infixExpression[index + 1]) || infixExpression[index + 1] == '.') {
           postfixExpression += exp;
+          continue;
         }
-      } // Check for decimal numbers
-      else if (exp == '.') {
-        postfixExpression += '.';
+      }
+
+      // Check for decimal numbers
+      if (exp == '.') {
+        postfixExpression += exp;
       } else if (isDigitRegEx.hasMatch(exp) || exp == ' ') // Check for valid positive numbers and whitespace
         postfixExpression += exp;
       else if (exp == '(') // Check for open parenthesis
         stack.push(exp);
       // Check for closing parethesis
       else if (exp == ')') {
-        while (exp.isNotEmpty && stack.peek() != '(') {
+        while (stack.isNotEmpty && stack.peek() != '(') {
           postfixExpression += stack.pop();
         }
 
@@ -297,6 +293,7 @@ class CalculatorBrain {
     }
 
     while (stack.isNotEmpty) {
+      if (stack.peek() == '(') return "Invalid expression!";
       postfixExpression += stack.pop();
     }
 
@@ -317,17 +314,21 @@ class CalculatorBrain {
       String exp = dirtyPostfix[index];
 
       if (exp == "-") {
-        if ((index + 1) >= dirtyPostfix.length) return "Invalid postfix expression!";
+        if ((index + 1) < dirtyPostfix.length) {
+          if (isDigitRegEx.hasMatch(dirtyPostfix[index + 1]) || dirtyPostfix[index + 1] == '.') {
+            validPostfix += exp;
 
-        if (isDigitRegEx.hasMatch(dirtyPostfix[index + 1])) {
-          validPostfix += exp;
+            continue;
+          }
         }
-      } else if (exp == '.') {
+      }
+
+      if (exp == '.') {
         validPostfix += exp;
       } else if (isDigitRegEx.hasMatch(exp) || exp == ' ')
         validPostfix += exp;
       else if (isOperator(exp)) {
-        if ((index - 1) < 0) return "Invalid postfix expression!";
+        if ((index - 1) < 0) return "Invalid postfix expression! @[$index - 1]";
 
         if (dirtyPostfix[index - 1] == ' ')
           validPostfix += exp;
