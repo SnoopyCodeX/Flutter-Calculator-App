@@ -29,7 +29,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   # Neomorphic Plugin
-  flutter_neumorphic: ^3.1.0
+  flutter_neumorphic: 
+    git:
+      url: https://github.com/den0206/Flutter-Neumorphic.git
+      ref: feature/remoce_accentcolor
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
