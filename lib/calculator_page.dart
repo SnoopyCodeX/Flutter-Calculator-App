@@ -1,31 +1,22 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:test_app/calculator_brain.dart';
-import 'package:test_app/constants.dart';
-import 'package:test_app/roundButton.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(CalculatorPage());
+import './calculator_brain.dart';
+import './constants.dart';
+import './result_provider.dart';
+import './roundButton.dart';
 
-class CalculatorPage extends StatelessWidget {
+class CalculatorPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData.light(),
-      home: CalculatorPageState(),
-    );
-  }
+  _CalculatorPage createState() => _CalculatorPage();
 }
 
-class CalculatorPageState extends StatefulWidget {
-  @override
-  _CalculatorPageState createState() => _CalculatorPageState();
-}
-
-class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerProviderStateMixin {
+class _CalculatorPage extends State<CalculatorPage> with SingleTickerProviderStateMixin {
   CalculatorBrain brain = CalculatorBrain();
   late TabController tabController;
   List<String> tabs = ['Basic', 'Advanced'];
-  List<String> result = ['0', ''];
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -49,9 +40,10 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
             Tab(text: tabs[0]),
             Tab(text: tabs[1]),
           ],
+          onTap: (index) => setState(() => currentIndex = index),
         ),
       ),
-      body: _basicModePage(),
+      body: currentIndex == 0 ? _basicModePage() : _basicModePage(),
     );
   }
 
@@ -61,25 +53,29 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          Expanded(
-            child: AutoSizeText(
-              result[0],
-              style: kResultTextStyle,
-              maxFontSize: 70,
-              minFontSize: 20,
-              stepGranularity: 10,
+          Consumer<ResultProvider>(
+            builder: (context, result, child) => Expanded(
+              child: AutoSizeText(
+                result.result[0],
+                style: kResultTextStyle,
+                maxFontSize: 70,
+                minFontSize: 20,
+                stepGranularity: 10,
+              ),
             ),
           ),
           SizedBox(
             height: 100,
             child: Padding(
               padding: const EdgeInsets.only(top: 20, bottom: 30),
-              child: AutoSizeText(
-                result[1],
-                style: kOperationTextStyle,
-                maxFontSize: 30,
-                minFontSize: 10,
-                stepGranularity: 10,
+              child: Consumer<ResultProvider>(
+                builder: (context, result, child) => AutoSizeText(
+                  result.result[1],
+                  style: kOperationTextStyle,
+                  maxFontSize: 30,
+                  minFontSize: 10,
+                  stepGranularity: 10,
+                ),
               ),
             ),
           ),
@@ -94,9 +90,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "AC",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("AC");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("AC"));
                   },
                 ),
                 RoundButton(
@@ -105,9 +99,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "+/-",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("+/-");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("+/-"));
                   },
                 ),
                 RoundButton(
@@ -116,9 +108,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "%",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("%");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("%"));
                   },
                 ),
                 RoundButton(
@@ -127,9 +117,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "C",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("C");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("C"));
                   },
                 ),
               ],
@@ -146,9 +134,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "7",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("7");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("7"));
                   },
                 ),
                 RoundButton(
@@ -157,9 +143,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "8",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("8");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("8"));
                   },
                 ),
                 RoundButton(
@@ -168,9 +152,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "9",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("9");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("9"));
                   },
                 ),
                 RoundButton(
@@ -179,9 +161,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "÷",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("÷");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("÷"));
                   },
                 ),
               ],
@@ -198,9 +178,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "4",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("4");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("4"));
                   },
                 ),
                 RoundButton(
@@ -209,9 +187,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "5",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("5");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("5"));
                   },
                 ),
                 RoundButton(
@@ -220,9 +196,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "6",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("6");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("6"));
                   },
                 ),
                 RoundButton(
@@ -231,9 +205,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "x",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("x");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("x"));
                   },
                 ),
               ],
@@ -250,9 +222,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "1",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("1");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("1"));
                   },
                 ),
                 RoundButton(
@@ -261,9 +231,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "2",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("2");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("2"));
                   },
                 ),
                 RoundButton(
@@ -272,9 +240,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "3",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("3");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("3"));
                   },
                 ),
                 RoundButton(
@@ -283,9 +249,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "-",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("-");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("-"));
                   },
                 ),
               ],
@@ -302,9 +266,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: ".",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed(".");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("."));
                   },
                 ),
                 RoundButton(
@@ -313,9 +275,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "0",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("0");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("0"));
                   },
                 ),
                 RoundButton(
@@ -324,9 +284,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "=",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("=");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("="));
                   },
                 ),
                 RoundButton(
@@ -335,9 +293,7 @@ class _CalculatorPageState extends State<CalculatorPageState> with SingleTickerP
                   buttonText: "+",
                   buttonWidth: 8,
                   onPressed: () {
-                    setState(() {
-                      result = brain.buttonPressed("+");
-                    });
+                    Provider.of<ResultProvider>(context, listen: false).updateResult(brain.buttonPressed("+"));
                   },
                 ),
               ],
