@@ -68,11 +68,24 @@ class _AdvancedCalculatorPageState extends State<AdvancedCalculatorPage> {
               ),
             ),
             onChanged: (expression) {
-              Provider.of<ValueXProvider>(context, listen: false)..updateX(expression.contains('x'));
-              calculateResult();
+              try {
+                Provider.of<ValueXProvider>(context, listen: false)..updateX(expression.contains('x'));
+                _expression = TeXParser(expression).parse();
+
+                calculateResult();
+              } catch (e) {
+                debugPrint("Error: $e");
+              }
             },
             onSubmitted: (expression) {
-              calculateResult();
+              try {
+                Provider.of<ValueXProvider>(context, listen: false)..updateX(expression.contains('x'));
+                _expression = TeXParser(expression).parse();
+
+                calculateResult();
+              } catch (e) {
+                debugPrint("Error: $e");
+              }
             },
             autofocus: true,
           ),
@@ -93,12 +106,20 @@ class _AdvancedCalculatorPageState extends State<AdvancedCalculatorPage> {
                         try {
                           _value = TeXParser(value).parse().evaluate(EvaluationType.REAL, ContextModel());
                           calculateResult();
-                        } catch (_) {}
+                        } catch (_) {
+                          debugPrint("Error: $_");
+                        }
                       },
                       decoration: InputDecoration(
                         labelText: 'Value for x',
                         filled: true,
-                        border: OutlineInputBorder(),
+                        labelStyle: TextStyle(color: kBlackColorText),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: kBlackColorText),
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: kBlackColorText),
+                        ),
                       ),
                     ),
                   ),
