@@ -31,6 +31,8 @@ class CalculatorBrain {
         break;
 
       case '+/-':
+        if (bottomText.contains('=') && bottomText.isNotEmpty) return output;
+
         if (topText == '0' && !operatorPressed || bottomText == '0' && operatorPressed) return output;
 
         if (!operatorPressed) {
@@ -50,6 +52,14 @@ class CalculatorBrain {
       case '-':
       case 'x':
       case '÷':
+        if (bottomText.contains('=')) {
+          output[0] = "${bottomText.substring(2)} $text";
+          output[1] = "";
+
+          bottomText = output[1];
+          topText = output[0];
+        }
+
         if (bottomText.isNotEmpty || !isOperator(topText[topText.length - 1])) {
           output[0] += bottomText.isNotEmpty ? " $bottomText" : "";
           output[1] = "";
