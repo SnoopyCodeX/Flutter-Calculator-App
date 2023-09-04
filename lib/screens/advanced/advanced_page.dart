@@ -68,6 +68,11 @@ class _AdvancedCalculatorPageState extends State<AdvancedCalculatorPage> {
               ),
             ),
             onChanged: (expression) {
+              if (expression.isEmpty)
+                setState(() {
+                  _result = 0;
+                });
+
               try {
                 Provider.of<ValueXProvider>(context, listen: false)..updateX(expression.contains('x'));
                 _expression = TeXParser(expression).parse();
@@ -103,6 +108,11 @@ class _AdvancedCalculatorPageState extends State<AdvancedCalculatorPage> {
                       controller: _valueController,
                       keyboardType: MathKeyboardType.numberOnly,
                       onChanged: (value) {
+                        if (value.isEmpty)
+                          setState(() {
+                            _result = 0;
+                          });
+
                         try {
                           _value = TeXParser(value).parse().evaluate(EvaluationType.REAL, ContextModel());
                           calculateResult();
