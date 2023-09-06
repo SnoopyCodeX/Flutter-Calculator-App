@@ -1,4 +1,8 @@
+/// Special thanks to my very special someone who pushed and convinced me to join the Studev's Challenge, Leslie G. Martinez
+///Copyright 2021-2023
+
 import 'package:flutter/material.dart';
+import 'package:holding_gesture/holding_gesture.dart';
 
 class CalculatorButton extends StatelessWidget {
   final Widget child;
@@ -24,13 +28,20 @@ class CalculatorButton extends StatelessWidget {
         fontSize: fontSize,
         color: fontColor,
       ),
-      child: InkResponse(
-        splashFactory: InkRipple.splashFactory,
-        highlightColor: Colors.transparent,
-        onTap: onPressed,
-        onTapDown: (details) => onLongPress,
-        child: Center(
-          child: child,
+      child: HoldDetector(
+        onHold: () {
+          if (onLongPress != null) onLongPress!();
+
+          debugPrint("Holding!");
+        },
+        holdTimeout: Duration(milliseconds: 50),
+        child: InkResponse(
+          splashFactory: InkRipple.splashFactory,
+          highlightColor: Colors.transparent,
+          onTap: onPressed,
+          child: Center(
+            child: child,
+          ),
         ),
       ),
     );
