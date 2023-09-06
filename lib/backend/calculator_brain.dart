@@ -1,50 +1,54 @@
-import 'package:flutter/cupertino.dart';
+/// Special thanks to my very special someone who pushed and convinced me to join the Studev's Challenge, Leslie G. Martinez
+///Copyright 2021-2023
+
+import 'package:flutter/material.dart';
+
 import 'dart_stack.dart';
 
 class CalculatorBrain {
-  List<String> output = ['0', ''];
-  bool operatorPressed = false;
+  List<String> _output = ['0', ''];
+  bool _operatorPressed = false;
 
   dynamic buttonPressed(String text) {
-    String topText = output[0];
-    String bottomText = output[1];
+    String topText = _output[0];
+    String bottomText = _output[1];
 
     switch (text) {
       case 'AC':
-        clearDisplay();
+        _clearDisplay();
         break;
 
       case 'C':
-        clearPreviousInput();
+        _clearPreviousInput();
         break;
 
       case '.':
-        if (!operatorPressed) {
-          if (topText.contains('.')) return output;
+        if (!_operatorPressed) {
+          if (topText.contains('.')) return _output;
 
-          output[0] += '.';
+          _output[0] += '.';
         } else {
-          if (bottomText.contains('.')) return output;
+          if (bottomText.contains('.')) return _output;
 
-          output[1] += '.';
+          _output[1] += '.';
         }
         break;
 
       case '+/-':
-        if (bottomText.contains('=') && bottomText.isNotEmpty) return output;
+        if (bottomText.contains('=') && bottomText.isNotEmpty) return _output;
 
-        if (topText == '0' && !operatorPressed || bottomText == '0' && operatorPressed) return output;
+        if (topText == '0' && !_operatorPressed || bottomText == '0' && _operatorPressed) return _output;
 
-        if (!operatorPressed) {
+        if (!_operatorPressed) {
           if (topText.startsWith('-'))
-            output[0] = topText.substring(1);
+            _output[0] = topText.substring(1);
           else
-            output[0] = '-' + topText;
+            _output[0] = '-' + topText;
         } else {
           if (bottomText.startsWith('-'))
-            output[1] = bottomText.substring(1);
+            _output[1] = bottomText.substring(1);
           else
-            output[1] = '-' + bottomText;
+            _output[1] = '-' + bottomText;
         }
         break;
 
@@ -53,109 +57,124 @@ class CalculatorBrain {
       case 'x':
       case '÷':
         if (bottomText.contains('=')) {
-          output[0] = "${bottomText.substring(2)} $text";
-          output[1] = "";
+          _output[0] = "${bottomText.substring(2)} $text";
+          _output[1] = "";
 
-          bottomText = output[1];
-          topText = output[0];
+          bottomText = _output[1];
+          topText = _output[0];
         }
 
-        if (bottomText.isNotEmpty || !isOperator(topText[topText.length - 1])) {
-          output[0] += bottomText.isNotEmpty ? " $bottomText" : "";
-          output[1] = "";
+        if (bottomText.isNotEmpty || !_isOperator(topText[topText.length - 1])) {
+          _output[0] += bottomText.isNotEmpty ? " $bottomText" : "";
+          _output[1] = "";
 
-          topText = output[0];
-          bottomText = output[1];
+          topText = _output[0];
+          bottomText = _output[1];
 
-          operatorPressed = false;
+          _operatorPressed = false;
         }
 
         String lastChar = topText[topText.length - 1];
-        operatorPressed = true;
+        _operatorPressed = true;
 
-        if (isOperator(lastChar)) {
-          output[0] = topText.substring(0, topText.length - 1);
-          output[0] += text;
+        if (_isOperator(lastChar)) {
+          _output[0] = topText.substring(0, topText.length - 1);
+          _output[0] += text;
         } else {
-          if (lastChar == '.') output[0] += '0';
-          output[0] += " $text";
+          if (lastChar == '.') _output[0] += '0';
+          _output[0] += " $text";
         }
         break;
 
       case '%':
-        if (topText == '0') return output;
+        if (topText == '0') return _output;
 
-        if (operatorPressed) clearPreviousInput();
+        if (_operatorPressed) _clearPreviousInput();
 
         bool hasExpression = false;
         if (bottomText.isNotEmpty) {
           if (bottomText.contains('='))
-            output[0] = bottomText.substring(2);
+            _output[0] = bottomText.substring(2);
           else {
-            output[0] += " $bottomText";
+            _output[0] += " $bottomText";
             hasExpression = true;
           }
         }
 
         if (hasExpression) {
-          String answer = evaluateExpression(output[0]);
+          String answer = _evaluateExpression(_output[0]);
 
           if (answer.contains("Cannot divide by zero!")) {
-            output[1] = answer;
-            return output;
+            _output[1] = answer;
+            return _output;
           }
 
-          output[0] += ' = $answer%';
-          output[1] = "= ${(answer.contains(".") ? (double.parse(answer) / 100) : (int.parse(answer) / 100))}"; // Display final result on bottom text
+          _output[0] += ' = $answer%';
+          _output[1] = "= ${(answer.contains(".") ? (double.parse(answer) / 100) : (int.parse(answer) / 100))}"; // Display final result on bottom text
         } else {
-          output[1] = "= ${output[0].contains(".") ? (double.parse(output[0]) / 100) : (int.parse(output[0]) / 100)}";
-          output[0] += '%';
+          _output[1] = "= ${_output[0].contains(".") ? (double.parse(_output[0]) / 100) : (int.parse(_output[0]) / 100)}";
+          _output[0] += '%';
         }
         break;
 
       case '=':
-        if (bottomText.isNotEmpty && !bottomText.contains('=')) {
-          output[0] += " $bottomText";
+        if (bottomText.isEmpty && topText.isNotEmpty && topText != '0') {
+          RegExp lastCharExp = RegExp(r'[\+|\-|x|÷]$');
+          if (!_isValidExpression(topText) || lastCharExp.hasMatch(topText))
+            _output[1] = "= Invalid expression!";
+          else {
+            _output[1] = "= ${_evaluateExpression(topText)}";
+          }
 
-          String answer = evaluateExpression(output[0]);
-          output[1] = "= $answer"; // Display final result on bottom text
+          return _output;
+        }
+
+        if (bottomText.isNotEmpty && !bottomText.contains('=')) {
+          _output[0] += " $bottomText";
+
+          String answer = _evaluateExpression(_output[0]);
+          _output[1] = "= $answer"; // Display final result on bottom text
         }
         break;
 
       default:
-        if (!operatorPressed) {
+        if (!_operatorPressed) {
           if (topText.length == 1 && topText == '0')
-            output[0] = text;
+            _output[0] = text;
           else
-            output[0] += text;
+            _output[0] += text;
         } else {
           if (bottomText.length == 1 && bottomText == '0')
-            output[1] = text;
+            _output[1] = text;
           else
-            output[1] += text;
+            _output[1] += text;
         }
     }
 
-    return output;
+    return _output;
   }
 
   @protected
-  clearDisplay() {
-    output = ['0', ''];
-    operatorPressed = false;
+  _clearDisplay() {
+    _output = ['0', ''];
+    _operatorPressed = false;
   }
 
   @protected
-  clearPreviousInput() {
-    String topText = output[0];
-    String bottomText = output[1];
+  _clearPreviousInput() {
+    String topText = _output[0];
+    String bottomText = _output[1];
 
     // Check if bottom text is not empty
     // If so,  we want to first clear the bottom text
     // until it's empty before proceeding to the top text.
     if (bottomText.isNotEmpty) {
-      // Remove last char from the bottom text
-      output[1] = bottomText.length > 1 ? bottomText.substring(0, bottomText.length - 1) : '';
+      // Clear all bottom text if it contains an equal sign
+      if (bottomText.contains('='))
+        _output[1] = '';
+      else
+        // Remove last char from the bottom text
+        _output[1] = bottomText.length > 1 ? bottomText.substring(0, bottomText.length - 1) : '';
       return;
     }
 
@@ -164,23 +183,23 @@ class CalculatorBrain {
       String lastChar = topText[topText.length - 1];
 
       // If last character is an operator
-      if (isOperator(lastChar)) {
-        operatorPressed = false;
+      if (_isOperator(lastChar)) {
+        _operatorPressed = false;
       }
 
       // Remove last char from the top text
-      output[0] = topText.length > 1 ? topText.substring(0, topText.length - (isOperator(lastChar) || lastLastChar == '-' || lastLastChar == ' ' ? 2 : 1)) : '';
-      output[0] = output[0].isEmpty ? '0' : output[0];
+      _output[0] = topText.length > 1 ? topText.substring(0, topText.length - (_isOperator(lastChar) || lastLastChar == '-' || lastLastChar == ' ' ? 2 : 1)) : '';
+      _output[0] = _output[0].isEmpty ? '0' : _output[0];
     }
   }
 
   @protected
-  bool isOperator(String char) {
-    return (getOperatorPrecedence(char) != -1);
+  bool _isOperator(String char) {
+    return (_getOperatorPrecedence(char) != -1);
   }
 
   @protected
-  int getOperatorPrecedence(String operator) {
+  int _getOperatorPrecedence(String operator) {
     switch (operator) {
       case '+':
       case '-':
@@ -198,7 +217,7 @@ class CalculatorBrain {
   }
 
   @protected
-  dynamic performOperation(dynamic operand1, dynamic operand2, String operator) {
+  dynamic _performOperation(dynamic operand1, dynamic operand2, String operator) {
     dynamic result = 0.00;
 
     switch (operator) {
@@ -227,10 +246,13 @@ class CalculatorBrain {
   }
 
   @protected
-  String evaluateExpression(String expression) {
+  bool _isValidExpression(String expression) => !(_infixToPostfix(expression).toLowerCase().contains("invalid"));
+
+  @protected
+  String _evaluateExpression(String expression) {
     DartStack<dynamic> stack = DartStack<dynamic>();
     RegExp isDigitRegEx = RegExp(r'\-?[0-9]+\.?[0-9]*');
-    String postfix = infixToPostfix(expression);
+    String postfix = _infixToPostfix(expression);
     String result = "";
 
     for (String exp in postfix.split(" ")) {
@@ -241,7 +263,7 @@ class CalculatorBrain {
 
         if (exp == '!') {
           String operator = exp;
-          stack.push(performOperation(operand2, 0, operator));
+          stack.push(_performOperation(operand2, 0, operator));
 
           continue;
         }
@@ -249,7 +271,7 @@ class CalculatorBrain {
         double operand1 = stack.pop();
         String operator = exp;
 
-        stack.push(performOperation(operand1, operand2, operator));
+        stack.push(_performOperation(operand1, operand2, operator));
       }
     }
 
@@ -259,7 +281,7 @@ class CalculatorBrain {
   }
 
   @protected
-  String infixToPostfix(String infixExpression) {
+  String _infixToPostfix(String infixExpression) {
     DartStack<String> stack = DartStack<String>();
     String postfixExpression = "";
 
@@ -294,7 +316,7 @@ class CalculatorBrain {
         if (stack.isNotEmpty) stack.pop();
       } else {
         // Check for operators and their precedence
-        while (stack.isNotEmpty && getOperatorPrecedence(exp) <= getOperatorPrecedence(stack.peek())) {
+        while (stack.isNotEmpty && _getOperatorPrecedence(exp) <= _getOperatorPrecedence(stack.peek())) {
           postfixExpression += stack.pop();
         }
 
@@ -309,13 +331,15 @@ class CalculatorBrain {
 
     if (postfixExpression.startsWith(' ')) postfixExpression = postfixExpression.substring(1);
     postfixExpression = postfixExpression.replaceAll(RegExp("\\s\\s+"), " ");
-    postfixExpression = toValidPostfix(postfixExpression);
+    postfixExpression = _toValidPostfix(postfixExpression);
+
+    debugPrint("@_infixToPostfix--result: $postfixExpression");
 
     return postfixExpression;
   }
 
   @protected
-  String toValidPostfix(String postfix) {
+  String _toValidPostfix(String postfix) {
     String dirtyPostfix = postfix;
     String validPostfix = "";
 
@@ -337,7 +361,7 @@ class CalculatorBrain {
         validPostfix += exp;
       } else if (isDigitRegEx.hasMatch(exp) || exp == ' ')
         validPostfix += exp;
-      else if (isOperator(exp)) {
+      else if (_isOperator(exp)) {
         if ((index - 1) < 0) return "Invalid postfix expression! @[$index - 1]";
 
         if (dirtyPostfix[index - 1] == ' ')
