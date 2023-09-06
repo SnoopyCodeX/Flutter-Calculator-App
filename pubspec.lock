@@ -174,7 +174,7 @@ packages:
     source: hosted
     version: "2.3.1"
   holding_gesture:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: holding_gesture
       sha256: beb26bb731d7d67595c4895b42fa7962c209cecee8def42b665c495648d4620f
@@ -198,7 +198,7 @@ packages:
     source: hosted
     version: "4.0.2"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"

@@ -37,6 +37,8 @@ dependencies:
   giffy_dialog: ^2.0.0+2
   url_launcher: ^6.1.14
   flutter_web_frame: ^1.0.0
+  holding_gesture: ^1.2.0
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
