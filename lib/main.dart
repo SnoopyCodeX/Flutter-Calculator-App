@@ -1,3 +1,6 @@
+/// Special thanks to my very special someone who pushed and convinced me to join the Studev's Challenge, Leslie G. Martinez
+///Copyright 2021-2023
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,7 +31,7 @@ class CalculatorApp extends StatelessWidget {
         maximumSize: Size(496, height),
         builder: (context) => MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: ThemeData.light(useMaterial3: true),
+          theme: ThemeData.light(useMaterial3: false),
           home: CalculatorPage(),
         ),
       ),
