@@ -1,5 +1,10 @@
+/// Special thanks to my very special someone who pushed and convinced me to join the Studev's Challenge, Leslie G. Martinez
+///Copyright 2021-2023
+
 import 'package:flutter/material.dart';
+import 'package:flutter_calculator_app/backend/result_provider.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../backend/constants.dart';
@@ -58,6 +63,9 @@ class _CalculatorPage extends State<CalculatorPage> with SingleTickerProviderSta
               Tab(text: tabs[1]),
             ],
             onTap: (index) {
+              if (index == currentIndex) return;
+
+              Provider.of<ResultProvider>(context, listen: false).updateResult(['0', '']);
               setState(() => currentIndex = index);
             },
           ),
@@ -71,6 +79,7 @@ class _CalculatorPage extends State<CalculatorPage> with SingleTickerProviderSta
     return GiffyDialog.lottie(
       LottieBuilder.asset('assets/lottie/lottie-1.json'),
       title: Text('About This App'),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       content: Text(
         'This is a simple calculator made with flutter. I made this 2 years ago as my first practice flutter application, and then decided to submit this as my entry for Studev\'s Quest #8 Calculator Challenge.'
         ' I had to refactor and add some more features to this app because this only had basic functions when I first created this.\n\n'
