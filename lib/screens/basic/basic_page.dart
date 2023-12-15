@@ -1,4 +1,3 @@
-/// Special thanks to my very special someone who pushed and convinced me to join the Studev's Challenge, Leslie G. Martinez
 ///Copyright 2021-2023
 
 import 'package:auto_size_text/auto_size_text.dart';
